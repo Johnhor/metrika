@@ -1,0 +1,2 @@
+METRIKA
+ -Responsive page
