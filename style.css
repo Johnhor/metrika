@@ -96,14 +96,54 @@ header {
 /*Конец блока desc*/
 
 
+/*Блок .columns-md-3*/
+
+.columns-md-3 {
+	columns: 3;
+	column-gap: 30px;
+}
 
 /*Карточка*/
+.card {
+	background: white;
+	border-radius: 6px;
+	display: inline-block;
+	width: 100%;
+	margin: 15px 0;
+	box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.08);
 
+}
 .card__title {
 	margin: 0;
 	color: #666666;
 	font-size: 14px;
+	line-height: 50px;
+	border-bottom: 2px solid #fafafa;
+	padding: 0 30px;
 }
-.columns-md-3 {
-	columns: 3;
+.list {
+	margin: 0;
+	padding: 0;
+}
+.list__item {
+	list-style: none;
+	line-height: 50px;
+	padding: 0 30px;
+	border-bottom: 2px solid #fafafa;
+}
+.list__link {
+	color: #666699;
+	text-decoration: none;
+}
+.card__diagram {
+	text-align: center;
+	padding: 15px 30px;
+}
+.diagram {
+    padding: 0 30px;
+    line-height: 30px;
+}
+.diagram__item {
+	display: flex;
+	justify-content: space-between;
 }
