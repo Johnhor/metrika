@@ -147,3 +147,71 @@ header {
 	display: flex;
 	justify-content: space-between;
 }
+
+
+/*Медиа запросы*/
+
+ /* Мобильная версия ( от 600px и ниже) */
+@media only screen and (max-width: 600px) {
+  .columns-md-3 {
+	columns: 1;
+ }
+ .container {
+ 	width: 300px;
+ }
+ .header {
+ 	display: block;
+ 	text-align: center;
+ }
+ .header__nav {
+ 	display: block;
+ 	padding: 0;
+ }
+ .nav__item {
+ 	margin: 0;
+ }
+ .desc {
+ 	text-align: center;
+ }
+ .aside {
+ 	display: block;
+ }
+ .aside__title {
+ 	margin: 0;
+ }
+}
+
+/* Для маленьких устройств (портативные планшенты или большие телефоны,от 600px и выше) */
+@media only screen and (min-width: 600px) {
+  .columns-md-3 {
+  	columns: 2;
+  }
+  .container {
+  	width: 550px;
+  }
+
+}
+
+/* Для средних устройств (планшеты и т.д., размер от 768px и выше) */
+@media only screen and (min-width: 768px) {
+  .container {
+  	width: 700px;
+  }
+} 
+
+/* Для широких устройств (ноутбук,ПК. От 992px и выше) */
+@media only screen and (min-width: 992px) {
+ .columns-md-3 {
+ 	columns: 3;
+ }
+ .container {
+ 	width: 900px;
+ }
+} 
+
+/* Для больших устройств (ноутбуки,ПК. От 1200px и выше) */
+@media only screen and (min-width: 1200px) {
+  .container {
+ 	width: 100%;
+ }
+}
