@@ -153,7 +153,7 @@ header {
 /*Медиа запросы*/
 
  /* Мобильная версия ( от 600px и ниже) */
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 599px) {
   .columns-md-3 {
 	columns: 1;
  }
@@ -276,7 +276,7 @@ header {
 
 
 /* Мобильная версия ( от 600px и ниже) */
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 599px) {
  .columns__item {
  	flex-basis: 100%;
  }
