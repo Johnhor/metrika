@@ -1,0 +1,610 @@
+<template>
+  <main class="statistics-page">
+    <div class="container">
+      <section class="statistics-desc">
+        <div class="statistics-desc__wrap">
+          <router-link class="statistics-desc__link statistics-desc__link_chevron" to="/">Назад
+          </router-link>
+        </div>
+        <h1 class="statistics-desc__title statistics-desc__title_chevron">credithub.ru</h1>
+      </section>
+      <section class="statistics-content">
+        <div class="statistics-inner">
+          <form action="" method="get" class="form-filter">
+            <div class="form-filter__date">
+              14 авг - 14 сен 2018
+            </div>
+            <input v-model="search" type="text" name="search" placeholder="Поиск по сылке, № или Яндекс ID"
+                   class="form-filter__search">
+            <select v-model="selectedDevice" class="form-filter__select">
+              <option v-for="option in deviceItems" v-bind:value="option.value">
+                {{ option.text }}
+              </option>
+              <!--<option value>Устройство</option>-->
+              <!--<option value>android</option>-->
+              <!--<option value>ios</option>-->
+            </select>
+            <select v-model="selectedBrowsers" class="form-filter__select">
+              <option v-for="option2 in browsersItems" v-bind:value="option2.value">
+                {{ option2.text }}
+              </option>
+            </select>
+            <select v-model="selectedCountry" class="form-filter__select">
+              <option v-for="option3 in countryItems" v-bind:value="option3.value">
+                {{ option3.text }}
+              </option>
+            </select>
+            <select v-model="selectedCity" class="form-filter__select">
+              <option v-for="option4 in cityItems" v-bind:value="option4.value">
+                {{ option4.text }}
+              </option>
+            </select>
+          </form>
+          <div class="meta">
+            <span class="meta__date">14 августа</span>
+          </div>
+          <table class="table">
+            <tbody class="table__body">
+
+            <tr v-for="item in filterData" class="table__row">
+              <td class="table__cell table__cell_statistics-hour">{{ item.time}}</td>
+              <td class="table__cell  table__cell_statistics-name">
+                <div class="statistic">
+                  <router-link class="statistic__link" to="/">
+                    {{ item.link}}
+                  </router-link>
+                </div>
+              </td>
+              <td class="table__cell table__cell_statistics-country">{{ item.country}}</td>
+              <td class="table__cell table__cell_statistics-device">{{ item.device}}</td>
+              <td class="table__cell table__cell_statistics-browsers">{{ item.browser }}</td>
+              <td class="table__cell table__cell_statistics-city">{{ item.city }}</td>
+              <!--<td class="table__cell table__cell_statistics-device">-->
+              <!--&lt;!&ndash;<img src="../images/chrome.svg" class="table__cell_img">&ndash;&gt;-->
+              <!--&lt;!&ndash;<img src="../images/android.svg" class="table__cell_img">&ndash;&gt;-->
+              <!--&lt;!&ndash;<img src="../images/russia.svg" class="table__cell_img">&ndash;&gt;-->
+              <!--{{ selected }}-->
+              <!--</td>-->
+              <td class="table__cell table__cell_statistics-number">№ {{ item.number }}</td>
+              <td class="table__cell table__cell_statistics-id">Я:{{ item.id }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="statistics-pagination">
+        <div class="pagination">
+          <div class="before pagination__before">
+            <button class="btn before__btn before__btn_leftArrow">предыдущая страница</button>
+          </div>
+          <div class="pagination__page">
+            {{ currentPage }}
+          </div>
+          <div class="next pagination__next">
+            <button class="btn next__btn next__btn_rightArrow">следующая страница</button>
+          </div>
+        </div>
+        <v-pagination v-model="currentPage" :page-count="pageCount" :labels="paginationAnchorTexts">
+        </v-pagination>
+      </section>
+    </div>
+  </main>
+</template>
+<script>
+    import vPagination from 'vue-plain-pagination'
+
+    export default {
+        components: {vPagination},
+        data: function () {
+            return {
+                currentPage: 1,
+                countPerPage: 10,
+                bootstrapPaginationClasses: {
+                    div: 'pagination',
+                    li: 'page-item',
+                    liActive: 'active',
+                    liDisable: 'disabled',
+                    button: 'page-link'
+                },
+                paginationAnchorTexts: {
+                    prev: 'предыдущая страница',
+                    next: 'следующая страница',
+                },
+                search: '',
+                selectedDevice: '',
+                deviceItems: [
+                    {text: 'Устройство', value: ''},
+                    {text: 'ios', value: 'ios'},
+                    {text: 'android', value: 'android'}
+                ],
+                selectedBrowsers: '',
+                browsersItems: [
+                    {text: 'Браузеры', value: ''},
+                    {text: 'Chrome', value: 'chrome'},
+                    {text: 'Yandex', value: 'yandex'},
+                    {text: 'Firefox', value: 'firefox'},
+                    {text: 'Opera', value: 'opera'},
+                    {text: 'Safari', value: 'safari'}
+                ],
+                selectedCountry: '',
+                countryItems: [
+                    {text: 'Страна', value: ''},
+                    {text: 'Россия', value: 'Russia'},
+                    {text: 'Молдова', value: 'Moldova'},
+                    {text: 'Украина', value: 'Ukraine'},
+                    {text: 'Беларусь', value: 'Belarus'},
+                    {text: 'Германия', value: 'Germany'}
+                ],
+                selectedCity: '',
+                cityItems: [
+                    {text: 'Город', value: ''},
+                    {text: 'Москва', value: 'moscow'},
+                    {text: 'Кишинев', value: 'chisinau'},
+                    {text: 'Киев', value: 'kiev'},
+                    {text: 'Минск', value: 'minsk'},
+                    {text: 'Франкфурт', value: 'frankfurt'}
+                ],
+                data: [
+                    {
+                        'time': '01:00',
+                        'link': 'Moscow-Link',
+                        'device': 'ios',
+                        'browser': 'chrome',
+                        'country': 'Russia',
+                        'city': 'moscow',
+                        'number': '42',
+                        'id': '2039321272710166312'
+                    },
+
+                    {
+                        'time': '02:00',
+                        'link': 'Chisinau-Link',
+                        'device': 'ios',
+                        'browser': 'firefox',
+                        'country': 'Moldova',
+                        'city': 'chisinau',
+                        'number': '10',
+                        'id': '1509621272710166938'
+                    },
+
+                    {
+                        'time': '03:00',
+                        'link': 'Kiev-Link',
+                        'device': 'android',
+                        'browser': 'yandex',
+                        'country': 'Ukraine',
+                        'city': 'kiev',
+                        'number': '56',
+                        'id': '5039621272710166324'
+                    },
+
+                    {
+                        'time': '04:00',
+                        'link': 'Minsk-Link',
+                        'device': 'ios',
+                        'browser': 'opera',
+                        'country': 'Belarus',
+                        'city': 'minsk',
+                        'number': '31',
+                        'id': '1539621272710166524'
+                    },
+
+                    {
+                        'time': '05:00',
+                        'link': 'Frankfurt-Link',
+                        'device': 'android',
+                        'browser': 'safari',
+                        'country': 'Germany',
+                        'city': 'frankfurt',
+                        'number': '22',
+                        'id': '4979621272710166200'
+                    },
+
+                    {
+                        'time': '06:00',
+                        'link': 'Moscow-Link',
+                        'device': 'ios',
+                        'browser': 'chrome',
+                        'country': 'Russia',
+                        'city': 'moscow',
+                        'number': '42',
+                        'id': '2039321272710166312'
+                    },
+
+                    {
+                        'time': '07:00',
+                        'link': 'Chisinau-Link',
+                        'device': 'ios',
+                        'browser': 'firefox',
+                        'country': 'Moldova',
+                        'city': 'chisinau',
+                        'number': '10',
+                        'id': '1509621272710166938'
+                    },
+
+                    {
+                        'time': '08:00',
+                        'link': 'Kiev-Link',
+                        'device': 'android',
+                        'browser': 'yandex',
+                        'country': 'Ukraine',
+                        'city': 'kiev',
+                        'number': '56',
+                        'id': '5039621272710166324'
+                    },
+
+                    {
+                        'time': '09:00',
+                        'link': 'Minsk-Link',
+                        'device': 'ios',
+                        'browser': 'opera',
+                        'country': 'Belarus',
+                        'city': 'minsk',
+                        'number': '31',
+                        'id': '1539621272710166524'
+                    },
+
+                    {
+                        'time': '10:00',
+                        'link': 'Frankfurt-Link',
+                        'device': 'android',
+                        'browser': 'safari',
+                        'country': 'Germany',
+                        'city': 'frankfurt',
+                        'number': '22',
+                        'id': '4979621272710166200'
+                    },
+
+                    {
+                        'time': '11:00',
+                        'link': 'Frankfurt-Link',
+                        'device': 'android',
+                        'browser': 'safari',
+                        'country': 'Germany',
+                        'city': 'frankfurt',
+                        'number': '22',
+                        'id': '4979621272710166200'
+                    },
+
+                    {
+                        'time': '12:00',
+                        'link': 'Frankfurt-Link',
+                        'device': 'android',
+                        'browser': 'safari',
+                        'country': 'Germany',
+                        'city': 'frankfurt',
+                        'number': '22',
+                        'id': '4979621272710166200'
+                    },
+
+                    {
+                        'time': '13:00',
+                        'link': 'Frankfurt-Link',
+                        'device': 'android',
+                        'browser': 'safari',
+                        'country': 'Germany',
+                        'city': 'frankfurt',
+                        'number': '22',
+                        'id': '4979621272710166200'
+                    },
+                ],
+
+            }
+        },
+        computed: {
+            pageCount() {
+                return this.filterData.length  / this.countPerPage;
+            },
+            filterData() {
+                let begin,end;
+                begin = this.countPerPage;
+                end = this.currentPage;
+                console.log(Math.ceil((begin * end) - begin));
+
+                return this.data.filter(item => {
+                    let conditions = [true];
+                    if (item.city) {
+                        conditions.push(item.city.indexOf(this.selectedCity) > -1);
+                    }
+                    if (item.country) {
+                        conditions.push(item.country.indexOf(this.selectedCountry) > -1);
+                    }
+                    if (item.browser) {
+                        conditions.push(item.browser.indexOf(this.selectedBrowsers) > -1);
+                    }
+                    if (item.device) {
+                        conditions.push(item.device.indexOf(this.selectedDevice) > -1);
+                    }
+
+                    if (this.search) {
+                        conditions.push(item.id.indexOf(this.search) !== -1 || item.number.indexOf(this.search) !== -1 || item.link.toLowerCase().indexOf(this.search) !== -1);
+                    }
+                    return conditions.every(condition => condition);
+                }) .slice(begin, end)
+            }
+        }
+
+    }
+</script>
+<style scoped>
+  .statistics-desc {
+    &__wrap {
+      padding-top: 40px;
+    }
+
+    &__link {
+      text-decoration: none;
+      color: #669;
+
+      &_chevron::before {
+        position: relative;
+        margin-right: 5px;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        content: "";
+        background: url("../images/leftchevron.svg") left bottom no-repeat;
+      }
+    }
+
+    &__title {
+      margin: 0;
+      padding: 15px 0 40px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 300;
+      font-style: normal;
+      font-stretch: normal;
+      text-align: left;
+      text-decoration: none;
+      letter-spacing: normal;
+      color: gray;
+
+      &_chevron::after {
+        margin-left: 10px;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        vertical-align: middle;
+        content: "";
+        background: url("../images/rightchevron.svg") bottom right;
+        background-size: cover;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .statistics-inner {
+    border-radius: 6px;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .form-filter {
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    flex-flow: row wrap;
+    border-bottom: 2px solid whitesmoke;
+
+    &__date {
+      padding: 5px 10px;
+      flex-basis: 12%;
+      font-size: 12px;
+      line-height: 25px;
+      text-align: center;
+      color: #666;
+      border: 2px solid whitesmoke;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    &__search {
+      padding: 5px 10px;
+      flex-basis: 35%;
+      font-size: 12px;
+      line-height: 25px;
+      color: #666;
+      border: 2px solid whitesmoke;
+      border-radius: 4px;
+      outline: none;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    &__select {
+      padding: 10px;
+      flex-basis: 11%;
+      font-size: 12px;
+      color: #666;
+      background: transparent;
+      border: 2px solid whitesmoke;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+
+  .meta {
+    padding: 0 30px;
+
+    &__date {
+      line-height: 40px;
+    }
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    border-top: 2px solid whitesmoke;
+
+    &__cell {
+      padding: 0 30px;
+      width: 1%;
+      font-size: 14px;
+      line-height: 50px;
+      text-align: left;
+      color: gray;
+    }
+
+    &__cell_statistics-id {
+      text-align: right;
+    }
+
+    &__cell_img {
+      margin-right: 16px;
+      width: 15px;
+      height: 15px;
+      vertical-align: text-top;
+    }
+
+    &__row {
+      background-color: white;
+      border-bottom: 2px solid whitesmoke;
+    }
+  }
+
+  .statistic {
+    position: relative;
+
+    &__link {
+      text-decoration: none;
+      color: gray;
+    }
+
+    &__link::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      content: '';
+    }
+
+    &__link::before {
+      margin-right: 5px;
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      vertical-align: middle;
+      content: "";
+      background: url("../images/plus.png") bottom left;
+      background-size: cover;
+      cursor: pointer;
+    }
+  }
+
+  .pagination {
+    margin: 40px 0;
+    padding: 0 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    line-height: 50px;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.08);
+
+    &__page {
+      font-size: 14px;
+      font-weight: 900;
+      color: #b3b3b3;
+    }
+  }
+
+  .before__btn {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 10px;
+    font-weight: 900;
+    text-decoration: none;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: #b3b3b3;
+    outline: none;
+
+    &_leftArrow::before {
+      position: relative;
+      margin-right: 20px;
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      vertical-align: sub;
+      content: "";
+      background: url("../images/right.svg") right bottom no-repeat;
+      transform: rotate(180deg);
+    }
+  }
+
+  .next__btn {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 10px;
+    font-weight: 900;
+    text-decoration: none;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: #b3b3b3;
+    outline: none;
+
+    &_rightArrow::after {
+      position: relative;
+      margin-left: 20px;
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      vertical-align: sub;
+      content: "";
+      background: url("../images/right.svg") right bottom no-repeat;
+    }
+  }
+
+  @media only screen and (max-width: 599px) {
+    .table {
+      display: block;
+      overflow: auto;
+    }
+
+    .form-filter {
+      display: block;
+
+      &__search {
+        width: 100%;
+        margin-top: 5px;
+      }
+
+      &__select {
+        width: 100%;
+        margin: 5px 0 5px 0;
+      }
+
+      &__date {
+        width: 100%;
+      }
+    }
+
+    .statistics-desc {
+      text-align: center;
+
+      &__title {
+        text-align: center;
+      }
+    }
+  }
+
+  @media only screen and (min-width: 600px) {
+    .table {
+      display: block;
+      overflow: auto;
+    }
+  }
+</style>
